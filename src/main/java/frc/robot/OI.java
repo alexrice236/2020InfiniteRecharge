@@ -24,13 +24,15 @@ public OI(){
     pilotController = new Joystick(0);
 
     Button pilotButtonY = new JoystickButton(pilotController, RobotMap.joystickButtonY);
-        pilotButtonY.whenPressed(new PositionArm());
+       // pilotButtonY.whenReleased(new PositionArm(1));
 
-    Button pilotButtonA = new JoystickButton(pilotController, RobotMap.joystickButtonA);
-        pilotButtonA.whenPressed(new PositionArm());
+       if(pilotButtonY.get()){new PositionArm(1);}
+
+    /*Button pilotButtonA = new JoystickButton(pilotController, RobotMap.joystickButtonA);
+        pilotButtonA.whenPressed(new PositionArm(2));
 
     Button pilotButtonX = new JoystickButton(pilotController, RobotMap.joystickButtonX);
-        pilotButtonX.whenPressed(new PositionArm());
+        pilotButtonX.whenPressed(new PositionArm(3));*/
 
 
 }

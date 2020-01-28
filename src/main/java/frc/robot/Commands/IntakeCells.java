@@ -4,15 +4,18 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
+
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
-public class DriveWithJoysticks extends Command {
-  public DriveWithJoysticks() {
-    requires(Robot.drivetrain);
+public class IntakeCells extends Command {
+  public IntakeCells() {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
+    requires(Robot.intake);
   }
 
   // Called just before this Command runs the first time
@@ -24,19 +27,14 @@ public class DriveWithJoysticks extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    super.execute();
-
-    double speed = -Robot.oi.getPilotController().getRawAxis(RobotMap.leftJoystickYAxis);
-    double rotation = Robot.oi.getPilotController().getRawAxis(RobotMap.rightJoystickXAxis) * 0.8;
-    
-    if(Robot.drivetrain.shouldUseReverseDrive()){
-      speed *= -1;
-    }
-
-      Robot.drivetrain.arcadeDrive(speed, rotation);
-
+    if(Robot.oi.getPilotController().getRawButton(RobotMap.joystickRightBumper)){
+      Robot.intake.intakeMotor.set(0.5);
+  }else if(Robot.oi.getPilotController().getRawButton(RobotMap.joystickLeftBumper)){
+      Robot.intake.intakeMotor.set(-0.5);
+  }else{
+    Robot.intake.intakeMotor.set(0);
   }
-  
+  }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
@@ -47,11 +45,13 @@ public class DriveWithJoysticks extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.intake.stopIntake();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }

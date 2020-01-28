@@ -9,33 +9,35 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Robot;
+import frc.robot.Subsystems.Intake;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
+
 public class PositionArm extends PIDCommand {
   /**
    * Creates a new PositionArm.
    */
-  public PositionArm() {
+  public PositionArm(double position) {
     super(
         // The controller that the command will use
-        new PIDController(0, 0, 0),
+        new PIDController(5, 0, -5),
         // This should return the measurement
-        () -> 0,
+        () -> Robot.intake.getArmPosition(),
         // This should return the setpoint (can also be a constant)
-        () -> 0,
+        () -> position,
         // This uses the output
         output -> {
           // Use the output here
+          Robot.intake.armMotor.set(output);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
+    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return getController().atSetpoint();
   }
 }

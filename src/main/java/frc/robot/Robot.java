@@ -9,11 +9,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Intake;
-import frc.robot.Commands.PositionArm;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -29,7 +27,8 @@ public class Robot extends TimedRobot {
   public static Drivetrain drivetrain;
   public static Intake intake;
 
-  public static PositionArm positionArm;
+
+
 
   /**
    * This function is run when the robot is first started up and should be
@@ -42,7 +41,9 @@ public class Robot extends TimedRobot {
 
     drivetrain = new Drivetrain();
 
-    positionArm = new PositionArm();
+    intake = new Intake();
+
+   
 
   }
 
