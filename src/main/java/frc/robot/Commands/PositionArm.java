@@ -12,11 +12,11 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Intake;
 
-
 public class PositionArm extends PIDCommand {
   /**
    * Creates a new PositionArm.
    */
+
   public PositionArm(double position) {
     super(
         // The controller that the command will use
@@ -32,7 +32,10 @@ public class PositionArm extends PIDCommand {
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
-    
+    addRequirements(Robot.intake);
+  }
+
+  private void addRequirements(Intake intake) {
   }
 
   // Returns true when the command should end.
@@ -40,4 +43,6 @@ public class PositionArm extends PIDCommand {
   public boolean isFinished() {
     return getController().atSetpoint();
   }
+
+ 
 }

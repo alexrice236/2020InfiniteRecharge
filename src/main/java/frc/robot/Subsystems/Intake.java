@@ -7,9 +7,8 @@
 
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
@@ -20,7 +19,7 @@ import frc.robot.Commands.IntakeCells;
  */
 public class Intake extends Subsystem {
   
-  public CANSparkMax armMotor = new CANSparkMax(RobotMap.armMotor, MotorType.kBrushless);
+  public WPI_TalonSRX armMotor = new WPI_TalonSRX(RobotMap.armMotor);
   public WPI_VictorSPX intakeMotor = new WPI_VictorSPX(RobotMap.intakeMotor);
 
 
@@ -31,17 +30,9 @@ public class Intake extends Subsystem {
   }
 
   public double getArmPosition(){
-    return armMotor.getEncoder().getPosition();
+    return armMotor.getSelectedSensorPosition();
   }
 
-  /*public void moveCells(){
-    if(Robot.oi.getPilotController().getRawButton(RobotMap.joystickRightBumper)){
-        intakeMotor.set(0.5);
-    }else if(Robot.oi.getPilotController().getRawButton(RobotMap.joystickLeftBumper)){
-        intakeMotor.set(-0.5);
-    }else{
-      intakeMotor.set(0);
-    }}*/
 
   public void stopIntake(){
     intakeMotor.set(0);
