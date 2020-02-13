@@ -27,13 +27,8 @@ public class IntakeCells extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(Robot.oi.getPilotController().getRawButton(RobotMap.joystickRightBumper)){
-      Robot.intake.intakeMotor.set(0.5);
-  }else if(Robot.oi.getPilotController().getRawButton(RobotMap.joystickLeftBumper)){
-      Robot.intake.intakeMotor.set(-0.5);
-  }else{
-    Robot.intake.intakeMotor.set(0);
-  }
+    Robot.intake.intakeMethod();
+    Robot.intake.moveArm();
   }
 
   // Make this return true when this Command no longer needs to run execute()

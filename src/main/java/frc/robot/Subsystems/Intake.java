@@ -8,9 +8,10 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.Commands.IntakeCells;
 
@@ -20,7 +21,7 @@ import frc.robot.Commands.IntakeCells;
 public class Intake extends Subsystem {
   
   public WPI_TalonSRX armMotor = new WPI_TalonSRX(RobotMap.armMotor);
-  public WPI_VictorSPX intakeMotor = new WPI_VictorSPX(RobotMap.intakeMotor);
+  public WPI_TalonSRX intakeMotor = new WPI_TalonSRX(RobotMap.intakeMotor);
 
 
   @Override
@@ -33,6 +34,18 @@ public class Intake extends Subsystem {
     return armMotor.getSelectedSensorPosition();
   }
 
+  public void intakeMethod(){
+  if(Robot.oi.getPilotController().getRawButton(RobotMap.joystickRightBumper)){
+    Robot.intake.intakeMotor.set(0.5);
+  }else if(Robot.oi.getPilotController().getRawButton(RobotMap.joystickLeftBumper)){
+    Robot.intake.intakeMotor.set(-0.5);
+  }else{
+  Robot.intake.intakeMotor.set(0);
+  }}
+
+  public void moveArm(){
+    armMotor.set(Robot.oi.getPilotController().getRawAxis(RobotMap.leftJoystickYAxis) * 0.4);
+  }
 
   public void stopIntake(){
     intakeMotor.set(0);
