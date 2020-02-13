@@ -15,10 +15,12 @@ public class RobotMap {
     public static final int leftBackMotor 	= 10;
 	public static final int leftFrontMotor 	= 11;
 	public static final int rightBackMotor 	= 12;
-    public static final int rightFrontMotor = 13;
+	public static final int rightFrontMotor = 13;
+	
+	public static final int climbMotor 		= 14;
 
-    public static final int armMotor = 15;
-    public static final int intakeMotor = 16;
+    public static final int armMotor 		= 15;
+    public static final int intakeMotor		= 16;
 
 
 
@@ -37,6 +39,9 @@ public class RobotMap {
 	    public static final int joystickButtonBack 			= 7;
     	public static final int joystickButtonStart 		= 8;
 	    public static final int joystickButtonLeftStick 	= 9;
-	    public static final int joystickButtonRightStick 	= 10;
+		public static final int joystickButtonRightStick 	= 10;
+		
+		public static final int frontCamera = 0;
+		public static final int backCamera = 1;
     
 }

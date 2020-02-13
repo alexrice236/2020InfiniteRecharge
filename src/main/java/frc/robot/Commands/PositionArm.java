@@ -38,7 +38,7 @@ public class PositionArm extends PIDCommand {
   private void addRequirements(Intake intake) {
   }
 
-  // Returns true when the command should end.
+  // R eturns true when the command should end.
   @Override
   public boolean isFinished() {
     return getController().atSetpoint();

@@ -7,11 +7,17 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.MjpegServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Intake;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,6 +34,11 @@ public class Robot extends TimedRobot {
   public static Intake intake;
 
 
+  public static UsbCamera frontCam;
+  public static UsbCamera backCam;
+  public static final int IMG_WIDTH = 320;
+  public static final int IMG_HEIGHT = 240;
+
 
 
   /**
@@ -43,7 +54,32 @@ public class Robot extends TimedRobot {
 
     intake = new Intake();
 
+    VideoMode videoMode = new VideoMode(1, IMG_WIDTH, IMG_HEIGHT, 30);
    
+    frontCam = CameraServer.getInstance().startAutomaticCapture(RobotMap.frontCamera);
+    frontCam.setResolution(IMG_WIDTH, IMG_HEIGHT);
+    frontCam.setExposureAuto();
+
+    CvSink cvSink1 = new CvSink("Cam_Front");
+    cvSink1.setSource(frontCam);
+
+    CvSource output1 = new CvSource("Front_Camera", PixelFormat.kMJPEG, IMG_WIDTH, IMG_HEIGHT, 50);
+
+    MjpegServer mjServer = new MjpegServer("Front_Camera_Server", 7072);
+    mjServer.setSource(output1);
+
+    backCam = CameraServer.getInstance().startAutomaticCapture(RobotMap.backCamera);
+    backCam.setResolution(IMG_WIDTH, IMG_HEIGHT);
+    backCam.setExposureAuto();
+
+    CvSink cvSink2 = new CvSink("Cam_Back");
+    cvSink2.setSource(backCam);
+
+    CvSource output2 = new CvSource("Back_Camera", PixelFormat.kMJPEG, IMG_WIDTH, IMG_HEIGHT, 50);
+
+    MjpegServer mjServer2 = new MjpegServer("Back_Camera_Server", 7072);
+    mjServer2.setSource(output2);
+
 
   }
 
