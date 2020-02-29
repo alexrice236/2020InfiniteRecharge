@@ -35,16 +35,22 @@ public class Intake extends Subsystem {
   }
 
   public void intakeMethod(){
-  if(Robot.oi.getPilotController().getRawButton(RobotMap.joystickRightBumper)){
+  if(Robot.oi.getCopilotController().getRawButton(RobotMap.joystickRightBumper)){
     Robot.intake.intakeMotor.set(0.5);
-  }else if(Robot.oi.getPilotController().getRawButton(RobotMap.joystickLeftBumper)){
+  }else if(Robot.oi.getCopilotController().getRawButton(RobotMap.joystickLeftBumper)){
     Robot.intake.intakeMotor.set(-0.5);
   }else{
   Robot.intake.intakeMotor.set(0);
   }}
 
   public void moveArm(){
-    armMotor.set(Robot.oi.getPilotController().getRawAxis(RobotMap.leftJoystickYAxis) * 0.4);
+    if(Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) < 0 && Robot.upperLimit.get()){
+      armMotor.set(-0.05);
+    }else if(Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) > 0 && Robot.lowerLimit.get()){
+      armMotor.set(0);
+    }else{
+    armMotor.set(-Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) * 0.35);
+    }
   }
 
   public void stopIntake(){

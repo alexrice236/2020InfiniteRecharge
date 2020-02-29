@@ -8,9 +8,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.Commands.PositionArm;
+
+
 
 /**
  * Add your docs here.
@@ -18,27 +17,23 @@ import frc.robot.Commands.PositionArm;
 public class OI {
 
     public Joystick pilotController;
+    public Joystick copilotController;
 
 public OI(){
 
     pilotController = new Joystick(0);
+    copilotController = new Joystick(1);
 
-    Button pilotButtonY = new JoystickButton(pilotController, RobotMap.joystickButtonY);
-       // pilotButtonY.whenReleased(new PositionArm(1));
-
-       if(pilotButtonY.get()){new PositionArm(1);}
-
-    /*Button pilotButtonA = new JoystickButton(pilotController, RobotMap.joystickButtonA);
-        pilotButtonA.whenPressed(new PositionArm(2));
-
-    Button pilotButtonX = new JoystickButton(pilotController, RobotMap.joystickButtonX);
-        pilotButtonX.whenPressed(new PositionArm(3));*/
-
+   
 
 }
 
 public Joystick getPilotController() {
     return pilotController;
+}
+
+public Joystick getCopilotController(){
+    return copilotController;
 }
 
 

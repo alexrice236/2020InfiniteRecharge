@@ -14,8 +14,11 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Intake;
 
@@ -32,6 +35,10 @@ public class Robot extends TimedRobot {
 
   public static Drivetrain drivetrain;
   public static Intake intake;
+  public static Climber climber;
+
+  public static DigitalInput upperLimit;
+  public static DigitalInput lowerLimit;
 
 
   public static UsbCamera frontCam;
@@ -53,6 +60,8 @@ public class Robot extends TimedRobot {
     drivetrain = new Drivetrain();
 
     intake = new Intake();
+
+    climber = new Climber();
 
     VideoMode videoMode = new VideoMode(1, IMG_WIDTH, IMG_HEIGHT, 30);
    
@@ -80,6 +89,10 @@ public class Robot extends TimedRobot {
     MjpegServer mjServer2 = new MjpegServer("Back_Camera_Server", 7072);
     mjServer2.setSource(output2);
 
+    upperLimit = new DigitalInput(RobotMap.upperLimit);
+    lowerLimit = new DigitalInput(RobotMap.lowerLimit);
+
+
 
   }
 
@@ -93,6 +106,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
+    SmartDashboard.putBoolean("ArmUP", upperLimit.get());
+    SmartDashboard.putBoolean("ArmDOWN", lowerLimit.get());
+
+    SmartDashboard.putNumber("joystick value", Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis));
 
   }
 
