@@ -61,5 +61,21 @@ public class Drivetrain extends Subsystem {
     useReverseDrive = notCurrentDriveDirection;
   }
 
+  public int getLeftEncoderPosition(){
+    return leftBackMotor.getSelectedSensorPosition();
+  }
+
+  public int getRightEncoderPosition(){
+    return rightBackMotor.getSelectedSensorPosition();
+
+  }
+
+  public double getAbsoluteDistance(){
+    double leftRotations = getLeftEncoderPosition() / 4096;
+    double rightRotations = getRightEncoderPosition() / -4096;
+
+    return (leftRotations + rightRotations) * 3;
+  }
+
 
 }

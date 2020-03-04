@@ -16,7 +16,9 @@ import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Drivetrain;
@@ -46,6 +48,7 @@ public class Robot extends TimedRobot {
   public static final int IMG_WIDTH = 320;
   public static final int IMG_HEIGHT = 240;
 
+  SendableChooser<Command> chooser = new SendableChooser<>();
 
 
   /**
