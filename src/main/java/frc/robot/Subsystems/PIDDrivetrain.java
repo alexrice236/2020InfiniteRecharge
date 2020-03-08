@@ -36,12 +36,15 @@ public class PIDDrivetrain extends PIDSubsystem {
 
   public boolean useReverseDrive = false;
 
+  public boolean useTurn = false;
+  public boolean useDrive = false;
+
   public double pidInput;
 
   
   public PIDDrivetrain() {
     // Intert a subsystem name and PID values here
-    super("PIDDrivetrain", 10, 0, -3);
+    super("PIDDrivetrain", 0, 0, 0);
     setAbsoluteTolerance(0.5);
 
     // Use these to get going:
@@ -67,7 +70,11 @@ public class PIDDrivetrain extends PIDSubsystem {
   @Override
   protected void usePIDOutput(double output) {
     // Use output to drive your system, like a motor
-    tankDrive(output, output);
+    if(useDrive){
+      tankDrive(output, output);
+    }else if(useTurn){
+      arcadeDrive(0, output);
+    }else{}
   }
 
   public void stopDrive(){

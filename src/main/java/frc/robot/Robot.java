@@ -17,12 +17,14 @@ import edu.wpi.cscore.VideoMode;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Commands.AutoDriveForward;
+import frc.robot.Commands.AutoTurn;
 import frc.robot.Commands.StraightForwardScoring;
 import frc.robot.Subsystems.Arm;
 import frc.robot.Subsystems.Climber;
@@ -110,8 +112,11 @@ public class Robot extends TimedRobot {
     upperLimit = new DigitalInput(RobotMap.upperLimit);
     lowerLimit = new DigitalInput(RobotMap.lowerLimit);
 
+    gyro = new AHRS(SPI.Port.kMXP);
+
     chooser = new SendableChooser<>();
     chooser.addOption("DriveForward", new StraightForwardScoring());
+    chooser.addOption("Turn90", new AutoTurn(90));
     SmartDashboard.putData("Initial Chooser", chooser);
 
 
@@ -135,6 +140,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.getLeftEncoderPosition());
     SmartDashboard.putNumber("rightEncoder", Robot.drivetrain.getRightEncoderPosition());
 
+    SmartDashboard.putNumber("GyroAngle", gyro.getAngle());
+
+    if(gyro.getAngle()>360){
+      gyro.reset();
+    }else if(gyro.getAngle() < -360){
+      gyro.reset();
+    }
   }
 
   /**
