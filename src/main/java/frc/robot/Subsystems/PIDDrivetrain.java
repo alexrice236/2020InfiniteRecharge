@@ -7,10 +7,11 @@
 
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap;
 import frc.robot.Commands.DriveWithJoysticks;
@@ -18,14 +19,15 @@ import frc.robot.Commands.DriveWithJoysticks;
 /**
  * Add your docs here.
  */
-public class Drivetrain extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
-
+public class PIDDrivetrain extends PIDSubsystem {
+  /**
+   * Add your docs here.
+   */
   private WPI_TalonFX leftBackMotor = new WPI_TalonFX(RobotMap.leftBackMotor);
   private WPI_TalonFX leftFrontMotor = new WPI_TalonFX(RobotMap.leftFrontMotor);
   private WPI_TalonFX rightBackMotor = new WPI_TalonFX(RobotMap.rightBackMotor);
   private WPI_TalonFX rightFrontMotor = new WPI_TalonFX(RobotMap.rightFrontMotor);
+
 
   private SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftBackMotor, leftFrontMotor);
   private SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightBackMotor, rightFrontMotor);
@@ -33,16 +35,43 @@ public class Drivetrain extends Subsystem {
   private DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
 
   public boolean useReverseDrive = false;
+
+  public double pidInput;
+
   
+  public PIDDrivetrain() {
+    // Intert a subsystem name and PID values here
+    super("PIDDrivetrain", 10, 0, -3);
+    setAbsoluteTolerance(0.5);
+
+    // Use these to get going:
+    // setSetpoint() - Sets where the PID controller should move the system
+    // to
+    // enable() - Enables the PID controller.
+  }
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new DriveWithJoysticks());
+       setDefaultCommand(new DriveWithJoysticks());
+  }
+
+  @Override
+  protected double returnPIDInput() {
+    // Return your input value for the PID loop
+    // e.g. a sensor, like a potentiometer:
+    // yourPot.getAverageVoltage() / kYourMaxVoltage;
+    return pidInput;
+  }
+
+  @Override
+  protected void usePIDOutput(double output) {
+    // Use output to drive your system, like a motor
+    tankDrive(output, output);
   }
 
   public void stopDrive(){
-    drive.arcadeDrive(0, 0);
+    drive.arcadeDrive(0, 0);  
   }
 
   public void arcadeDrive(double speed, double rotation){
@@ -56,6 +85,7 @@ public class Drivetrain extends Subsystem {
   public boolean shouldUseReverseDrive(){
     return useReverseDrive;
   }
+
 
   public void setUseReverseDrive(boolean notCurrentDriveDirection){
     useReverseDrive = notCurrentDriveDirection;
@@ -77,5 +107,16 @@ public class Drivetrain extends Subsystem {
     return (leftRotations + rightRotations) * 3;
   }
 
+  public void brakeMode(){
+    leftBackMotor.setNeutralMode(NeutralMode.Brake);
+    leftFrontMotor.setNeutralMode(NeutralMode.Brake);
+    rightBackMotor.setNeutralMode(NeutralMode.Brake);
+    rightFrontMotor.setNeutralMode(NeutralMode.Brake);
+  }
+
+  public void resetEncoders(){
+    leftBackMotor.setSelectedSensorPosition(0);
+    rightBackMotor.setSelectedSensorPosition(0);
+  }
 
 }

@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2019 FIRST. All Rights Reserved.                             */
+/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -7,44 +7,51 @@
 
 package frc.robot.Commands;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Drivetrain;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class AutoDriveForward extends PIDCommand {
-  /**
-   * Creates a new AutoDriveForward.
-   */
+public class AutoDriveForward extends Command {
 
-   private final Drivetrain m_dDrivetrain;
+  int driveDistance;
 
-
-  public AutoDriveForward(double distance) {
-    super(
-        // The controller that the command will use
-        new PIDController(10, 0, -3),
-        // This should return the measurement
-        () -> Robot.drivetrain.getAbsoluteDistance(),
-        // This should return the setpoint (can also be a constant)
-        () -> distance,
-        // This uses the output
-        output -> {
-          // Use the output here
-          Robot.drivetrain.tankDrive(output, output);
-        });
-    // Use addRequirements() here to declare subsystem dependencies.
-    // Configure additional PID options by calling `getController` here.
-
-    addRequirements(m_dDrivetrain);
+  public AutoDriveForward(int setpoint) {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
+    requires(Robot.drivetrain);
+    driveDistance = setpoint;
   }
 
-  // Returns true when the command should end.
+  // Called just before this Command runs the first time
   @Override
-  public boolean isFinished() {
-    return getController().atSetpoint();
+  protected void initialize() {
+    Robot.drivetrain.brakeMode();
+    Robot.drivetrain.resetEncoders();
+    Robot.drivetrain.setSetpoint(driveDistance);
+    Robot.drivetrain.enable();
+  }
+
+  // Called repeatedly when this Command is scheduled to run
+  @Override
+  protected void execute() {
+    Robot.drivetrain.pidInput = Robot.drivetrain.getAbsoluteDistance();
+  }
+
+  // Make this return true when this Command no longer needs to run execute()
+  @Override
+  protected boolean isFinished() {
+    return Robot.drivetrain.onTarget();
+  }
+
+  // Called once after isFinished returns true
+  @Override
+  protected void end() {
+    Robot.drivetrain.stopDrive();
+  }
+
+  // Called when another command which requires one or more of the same
+  // subsystems is scheduled to run
+  @Override
+  protected void interrupted() {
+    end();
   }
 }

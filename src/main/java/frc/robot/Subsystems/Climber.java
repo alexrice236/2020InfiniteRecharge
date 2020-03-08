@@ -45,9 +45,9 @@ public class Climber extends Subsystem {
 
   public void extendingHook(){
     if(Robot.oi.getCopilotController().getRawButton(RobotMap.joystickButtonY)){
-      extendClimb.set(ControlMode.PercentOutput, 0.4);
+      extendClimb.set(ControlMode.PercentOutput, 0.8);
     }else if(Robot.oi.getCopilotController().getRawButton(RobotMap.joystickButtonA)){
-      extendClimb.set(ControlMode.PercentOutput, -0.4);
+      extendClimb.set(ControlMode.PercentOutput, -0.8);
     }else{
       extendClimb.set(ControlMode.PercentOutput, 0);
     }

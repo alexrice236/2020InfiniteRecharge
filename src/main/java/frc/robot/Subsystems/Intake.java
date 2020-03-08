@@ -20,7 +20,6 @@ import frc.robot.Commands.IntakeCells;
  */
 public class Intake extends Subsystem {
   
-  public WPI_TalonSRX armMotor = new WPI_TalonSRX(RobotMap.armMotor);
   public WPI_TalonSRX intakeMotor = new WPI_TalonSRX(RobotMap.intakeMotor);
 
 
@@ -30,9 +29,6 @@ public class Intake extends Subsystem {
     setDefaultCommand(new IntakeCells());
   }
 
-  public double getArmPosition(){
-    return armMotor.getSelectedSensorPosition();
-  }
 
   public void intakeMethod(){
   if(Robot.oi.getCopilotController().getRawButton(RobotMap.joystickRightBumper)){
@@ -41,24 +37,12 @@ public class Intake extends Subsystem {
     Robot.intake.intakeMotor.set(-0.5);
   }else{
   Robot.intake.intakeMotor.set(0);
-  }}
-
-  public void moveArm(){
-    if(Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) < 0 && Robot.upperLimit.get()){
-      armMotor.set(-0.05);
-    }else if(Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) > 0 && Robot.lowerLimit.get()){
-      armMotor.set(0);
-    }else{
-    armMotor.set(-Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) * 0.5);
-    }
   }
+}
+
 
   public void stopIntake(){
     intakeMotor.set(0);
   }
-
-  public void stopArm(){
-    armMotor.set(0);
-}
 
 }

@@ -10,9 +10,8 @@ package frc.robot.Commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-
-public class IntakeCells extends Command {
-  public IntakeCells() {
+public class OutputCells extends Command {
+  public OutputCells() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.intake);
@@ -27,7 +26,9 @@ public class IntakeCells extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.intake.intakeMethod();
+    new ArmToPosition(10);
+    Robot.intake.intakeMotor.set(0.1);
+
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -39,13 +40,11 @@ public class IntakeCells extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.intake.stopIntake();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    end();
   }
 }

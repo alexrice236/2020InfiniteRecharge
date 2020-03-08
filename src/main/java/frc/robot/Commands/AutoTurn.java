@@ -8,38 +8,50 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
 
-public class AutonomousLowScoring extends Command {
-  public AutonomousLowScoring() {
+public class AutoTurn extends Command {
+
+  public int turnAngle;
+  
+  public AutoTurn(int setpoint) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    requires(Robot.drivetrain);
+    turnAngle = setpoint;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.gyro.reset();
+    Robot.drivetrain.brakeMode();
+    Robot.drivetrain.setSetpoint(turnAngle);
+    Robot.drivetrain.enable();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-      
+    Robot.drivetrain.pidInput = Robot.gyro.getAngle();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return Robot.drivetrain.onTarget();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.drivetrain.stopDrive();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }

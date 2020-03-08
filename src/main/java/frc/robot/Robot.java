@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.MjpegServer;
@@ -20,9 +22,12 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Commands.AutoDriveForward;
+import frc.robot.Commands.StraightForwardScoring;
+import frc.robot.Subsystems.Arm;
 import frc.robot.Subsystems.Climber;
-import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.PIDDrivetrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -35,12 +40,16 @@ public class Robot extends TimedRobot {
  
   public static OI oi;
 
-  public static Drivetrain drivetrain;
+  public static PIDDrivetrain drivetrain;
   public static Intake intake;
   public static Climber climber;
+  public static Arm arm;
+
 
   public static DigitalInput upperLimit;
   public static DigitalInput lowerLimit;
+
+  public static double autoSetpoint;
 
 
   public static UsbCamera frontCam;
@@ -48,7 +57,10 @@ public class Robot extends TimedRobot {
   public static final int IMG_WIDTH = 320;
   public static final int IMG_HEIGHT = 240;
 
-  SendableChooser<Command> chooser = new SendableChooser<>();
+  public static AHRS gyro;
+
+  Command autonomousCommand;
+  SendableChooser<Command> chooser;
 
 
   /**
@@ -60,11 +72,14 @@ public class Robot extends TimedRobot {
 
     oi = new OI();
 
-    drivetrain = new Drivetrain();
+    drivetrain = new PIDDrivetrain();
 
     intake = new Intake();
 
     climber = new Climber();
+
+    arm = new Arm();
+
 
     VideoMode videoMode = new VideoMode(1, IMG_WIDTH, IMG_HEIGHT, 30);
    
@@ -95,6 +110,10 @@ public class Robot extends TimedRobot {
     upperLimit = new DigitalInput(RobotMap.upperLimit);
     lowerLimit = new DigitalInput(RobotMap.lowerLimit);
 
+    chooser = new SendableChooser<>();
+    chooser.addOption("DriveForward", new StraightForwardScoring());
+    SmartDashboard.putData("Initial Chooser", chooser);
+
 
 
   }
@@ -113,7 +132,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("ArmUP", upperLimit.get());
     SmartDashboard.putBoolean("ArmDOWN", lowerLimit.get());
 
-    SmartDashboard.putNumber("joystick value", Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis));
+    SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.getLeftEncoderPosition());
+    SmartDashboard.putNumber("rightEncoder", Robot.drivetrain.getRightEncoderPosition());
 
   }
 
@@ -130,8 +150,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    
+    autonomousCommand = chooser.getSelected();
+    autonomousCommand.start();
   }
+  
 
   /**
    * This function is called periodically during autonomous.

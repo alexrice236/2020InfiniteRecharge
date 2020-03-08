@@ -8,21 +8,25 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
 
-public class FeedAlliance extends Command {
-  public FeedAlliance() {
+public class MoveArm extends Command {
+  public MoveArm() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    requires(Robot.arm);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    super.initialize();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.arm.moveArm();
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -34,11 +38,13 @@ public class FeedAlliance extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.arm.stopArm();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }
