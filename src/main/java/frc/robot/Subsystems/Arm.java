@@ -7,6 +7,7 @@
 
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
@@ -47,6 +48,10 @@ public class Arm extends PIDSubsystem {
     return getArmPosition();
   }
 
+  public void configureArmEncoder(){
+    armMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+  }
+
   @Override
   protected void usePIDOutput(double output) {
     // Use output to drive your system, like a motor
@@ -64,7 +69,7 @@ public class Arm extends PIDSubsystem {
     }else if(Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) > 0 && Robot.lowerLimit.get()){
       armMotor.set(0);
     }else{
-    armMotor.set(-Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) * 0.7);
+    armMotor.set(-Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) * 0.35);
     }
   }
   

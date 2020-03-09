@@ -24,6 +24,7 @@ public class ArmToPosition extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.arm.configureArmEncoder();
     Robot.arm.setSetpoint(armPosition);
     Robot.arm.enable();
   }

@@ -7,6 +7,7 @@
 
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -64,17 +65,18 @@ public class PIDDrivetrain extends PIDSubsystem {
     // Return your input value for the PID loop
     // e.g. a sensor, like a potentiometer:
     // yourPot.getAverageVoltage() / kYourMaxVoltage;
-    return pidInput;
+    return getAbsoluteDistance();
   }
 
   @Override
   protected void usePIDOutput(double output) {
     // Use output to drive your system, like a motor
-    if(useDrive){
       tankDrive(output, output);
-    }else if(useTurn){
-      arcadeDrive(0, output);
-    }else{}
+  }
+
+  public void configureDriveEncoders(){
+    leftBackMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    rightBackMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
   }
 
   public void stopDrive(){

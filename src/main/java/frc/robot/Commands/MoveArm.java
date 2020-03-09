@@ -7,6 +7,8 @@
 
 package frc.robot.Commands;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
@@ -21,6 +23,7 @@ public class MoveArm extends Command {
   @Override
   protected void initialize() {
     super.initialize();
+    Robot.arm.armMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   // Called repeatedly when this Command is scheduled to run
