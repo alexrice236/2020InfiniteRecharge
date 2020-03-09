@@ -25,7 +25,6 @@ public class AutoTurn extends Command {
   @Override
   protected void initialize() {
     Robot.drivetrain.useTurn = true;
-    Robot.drivetrain.brakeMode();
     Robot.drivetrain.setSetpoint(turnAngle);
     Robot.drivetrain.enable();
   }

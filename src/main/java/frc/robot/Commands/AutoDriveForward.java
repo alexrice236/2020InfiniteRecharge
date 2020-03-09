@@ -25,7 +25,6 @@ public class AutoDriveForward extends Command {
   @Override
   protected void initialize() {
     Robot.drivetrain.useDrive = true;
-    Robot.drivetrain.brakeMode();
     Robot.drivetrain.resetEncoders();
     Robot.drivetrain.setSetpoint(driveDistance);
     Robot.drivetrain.enable();

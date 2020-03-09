@@ -108,8 +108,8 @@ public class PIDDrivetrain extends PIDSubsystem {
   }
 
   public double getAbsoluteDistance(){
-    double leftRotations = getLeftEncoderPosition() / 4096;
-    double rightRotations = getRightEncoderPosition() / -4096;
+    double leftRotations = getLeftEncoderPosition() / 43827.2;
+    double rightRotations = getRightEncoderPosition() / -43827.2;
 
     return (leftRotations + rightRotations) * 3;
   }

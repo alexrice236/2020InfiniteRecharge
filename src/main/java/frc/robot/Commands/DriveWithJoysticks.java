@@ -19,7 +19,6 @@ public class DriveWithJoysticks extends Command {
   @Override
   protected void initialize() {
     super.initialize();
-    Robot.drivetrain.brakeMode();
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -27,7 +26,7 @@ public class DriveWithJoysticks extends Command {
   protected void execute() {
     super.execute();
 
-    double speed = -Robot.oi.getPilotController().getRawAxis(RobotMap.leftJoystickYAxis) * 0.8;
+    double speed = -Robot.oi.getPilotController().getRawAxis(RobotMap.leftJoystickYAxis);
     double rotation = Robot.oi.getPilotController().getRawAxis(RobotMap.rightJoystickXAxis) * 0.7;
     
     if(Robot.drivetrain.shouldUseReverseDrive()){

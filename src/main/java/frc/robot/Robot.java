@@ -17,15 +17,14 @@ import edu.wpi.cscore.VideoMode;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Commands.AutoDriveForward;
 import frc.robot.Commands.AutoTurn;
-import frc.robot.Commands.StraightForwardScoring;
 import frc.robot.Subsystems.Arm;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Intake;
@@ -55,7 +54,6 @@ public class Robot extends TimedRobot {
 
 
   public static UsbCamera frontCam;
-  public static UsbCamera backCam;
   public static final int IMG_WIDTH = 320;
   public static final int IMG_HEIGHT = 240;
 
@@ -82,40 +80,20 @@ public class Robot extends TimedRobot {
 
     arm = new Arm();
 
-
-    VideoMode videoMode = new VideoMode(1, IMG_WIDTH, IMG_HEIGHT, 30);
+    Robot.drivetrain.brakeMode();
    
     frontCam = CameraServer.getInstance().startAutomaticCapture(RobotMap.frontCamera);
     frontCam.setResolution(IMG_WIDTH, IMG_HEIGHT);
     frontCam.setExposureAuto();
 
-    CvSink cvSink1 = new CvSink("Cam_Front");
-    cvSink1.setSource(frontCam);
-
-    CvSource output1 = new CvSource("Front_Camera", PixelFormat.kMJPEG, IMG_WIDTH, IMG_HEIGHT, 50);
-
-    MjpegServer mjServer = new MjpegServer("Front_Camera_Server", 7072);
-    mjServer.setSource(output1);
-
-    backCam = CameraServer.getInstance().startAutomaticCapture(RobotMap.backCamera);
-    backCam.setResolution(IMG_WIDTH, IMG_HEIGHT);
-    backCam.setExposureAuto();
-
-    CvSink cvSink2 = new CvSink("Cam_Back");
-    cvSink2.setSource(backCam);
-
-    CvSource output2 = new CvSource("Back_Camera", PixelFormat.kMJPEG, IMG_WIDTH, IMG_HEIGHT, 50);
-
-    MjpegServer mjServer2 = new MjpegServer("Back_Camera_Server", 7072);
-    mjServer2.setSource(output2);
 
     upperLimit = new DigitalInput(RobotMap.upperLimit);
     lowerLimit = new DigitalInput(RobotMap.lowerLimit);
 
-    gyro = new AHRS(SPI.Port.kMXP);
+    gyro = new AHRS(Port.kUSB);
 
     chooser = new SendableChooser<>();
-    chooser.addOption("DriveForward", new StraightForwardScoring());
+    chooser.addOption("DriveForward", new AutoDriveForward(3000));
     chooser.addOption("Turn90", new AutoTurn(90));
     SmartDashboard.putData("Initial Chooser", chooser);
 
@@ -141,6 +119,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("rightEncoder", Robot.drivetrain.getRightEncoderPosition());
 
     SmartDashboard.putNumber("GyroAngle", gyro.getAngle());
+
+    SmartDashboard.putNumber("ArmAngle", Robot.arm.getArmPosition());
 
     if(gyro.getAngle()>360){
       gyro.reset();
