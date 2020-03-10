@@ -8,6 +8,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.Commands.LedOffAndOn;
 
 
 
@@ -25,6 +28,11 @@ public OI(){
 
     pilotController = new Joystick(0);
     copilotController = new Joystick(1);
+
+    Button pilotB = new JoystickButton(pilotController, RobotMap.joystickButtonB);
+    pilotB.toggleWhenPressed(new LedOffAndOn());
+
+
    
 
 }

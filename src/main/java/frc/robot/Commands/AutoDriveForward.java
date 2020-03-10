@@ -34,7 +34,6 @@ public class AutoDriveForward extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.drivetrain.pidInput = Robot.drivetrain.getAbsoluteDistance();
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -47,7 +46,6 @@ public class AutoDriveForward extends Command {
   @Override
   protected void end() {
     Robot.drivetrain.stopDrive();
-    Robot.drivetrain.useDrive = false;
   }
 
   // Called when another command which requires one or more of the same

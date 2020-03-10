@@ -46,8 +46,10 @@ public class PIDDrivetrain extends PIDSubsystem {
   
   public PIDDrivetrain() {
     // Intert a subsystem name and PID values here
+
     super("PIDDrivetrain", 0.1, 0, 0);
     setAbsoluteTolerance(0.5);
+
 
     // Use these to get going:
     // setSetpoint() - Sets where the PID controller should move the system
@@ -66,12 +68,13 @@ public class PIDDrivetrain extends PIDSubsystem {
     // Return your input value for the PID loop
     // e.g. a sensor, like a potentiometer:
     // yourPot.getAverageVoltage() / kYourMaxVoltage;
-    return pidInput;
+    return getLeftEncoderPosition();
   }
 
   @Override
   protected void usePIDOutput(double output) {
     // Use output to drive your system, like a motor
+
       if(useDrive){
         arcadeDrive(output, 0);
       }else if(useTurn){
@@ -82,6 +85,7 @@ public class PIDDrivetrain extends PIDSubsystem {
   public void configureDriveEncoders(){
     leftBackMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     rightBackMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+
   }
 
   public void stopDrive(){
