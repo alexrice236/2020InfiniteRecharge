@@ -26,8 +26,8 @@ public class AutoTurn extends Command {
   protected void initialize() {
     Robot.drivetrain.configureDriveEncoders();
     Robot.drivetrain.useTurn = true;
-    Robot.drivetrain.setSetpoint(turnAngle);
     Robot.drivetrain.enable();
+    Robot.drivetrain.setSetpoint(turnAngle);
   }
 
   // Called repeatedly when this Command is scheduled to run

@@ -46,7 +46,7 @@ public class PIDDrivetrain extends PIDSubsystem {
   
   public PIDDrivetrain() {
     // Intert a subsystem name and PID values here
-    super("PIDDrivetrain", 0, 0, 0);
+    super("PIDDrivetrain", 0.1, 0, 0);
     setAbsoluteTolerance(0.5);
 
     // Use these to get going:
@@ -66,13 +66,17 @@ public class PIDDrivetrain extends PIDSubsystem {
     // Return your input value for the PID loop
     // e.g. a sensor, like a potentiometer:
     // yourPot.getAverageVoltage() / kYourMaxVoltage;
-    return getAbsoluteDistance();
+    return pidInput;
   }
 
   @Override
   protected void usePIDOutput(double output) {
     // Use output to drive your system, like a motor
-      tankDrive(output, output);
+      if(useDrive){
+        arcadeDrive(output, 0);
+      }else if(useTurn){
+        arcadeDrive(0, output);
+      }
   }
 
   public void configureDriveEncoders(){
@@ -114,7 +118,7 @@ public class PIDDrivetrain extends PIDSubsystem {
     double leftRotations = getLeftEncoderPosition() / 43827.2;
     double rightRotations = getRightEncoderPosition() / -43827.2;
 
-    return (leftRotations + rightRotations) * 3;
+    return (leftRotations + rightRotations) * 3*Math.PI;
   }
 
   public void brakeMode(){

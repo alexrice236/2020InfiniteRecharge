@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.Joystick;
 
 
 
+
+
 /**
  * Add your docs here.
  */
@@ -23,7 +25,6 @@ public OI(){
 
     pilotController = new Joystick(0);
     copilotController = new Joystick(1);
-
    
 
 }
