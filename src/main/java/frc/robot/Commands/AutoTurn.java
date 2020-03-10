@@ -24,8 +24,6 @@ public class AutoTurn extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.drivetrain.useTurn = true;
-    Robot.drivetrain.brakeMode();
     Robot.drivetrain.setSetpoint(turnAngle);
     Robot.drivetrain.enable();
   }
@@ -46,7 +44,6 @@ public class AutoTurn extends Command {
   @Override
   protected void end() {
     Robot.drivetrain.stopDrive();
-    Robot.drivetrain.useTurn = false;
   }
 
   // Called when another command which requires one or more of the same

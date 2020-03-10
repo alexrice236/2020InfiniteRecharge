@@ -9,13 +9,11 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode;
-import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -25,7 +23,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Commands.AutoDriveForward;
 import frc.robot.Commands.AutoTurn;
-import frc.robot.Commands.StraightForwardScoring;
 import frc.robot.Subsystems.Arm;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Intake;
@@ -59,6 +56,12 @@ public class Robot extends TimedRobot {
   public static final int IMG_WIDTH = 320;
   public static final int IMG_HEIGHT = 240;
 
+  double x;
+  double y; 
+  double targets;
+  double area;
+  double skew;
+
   public static AHRS gyro;
 
   Command autonomousCommand;
@@ -82,40 +85,28 @@ public class Robot extends TimedRobot {
 
     arm = new Arm();
 
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTableEntry tx = table.getEntry("tx");
+    NetworkTableEntry ty = table.getEntry("ty");
+    NetworkTableEntry ta = table.getEntry("ta");
+    NetworkTableEntry tv = table.getEntry("tv");
+    NetworkTableEntry ts = table.getEntry("ts");
 
-    VideoMode videoMode = new VideoMode(1, IMG_WIDTH, IMG_HEIGHT, 30);
+    x = tx.getDouble(0.0);
+    y = ty.getDouble(0.0);
+    targets = tv.getDouble(0.0);
+    area = ta.getDouble(0.0);
+    skew = ts.getDouble(0.0);
+
    
     frontCam = CameraServer.getInstance().startAutomaticCapture(RobotMap.frontCamera);
     frontCam.setResolution(IMG_WIDTH, IMG_HEIGHT);
     frontCam.setExposureAuto();
 
-    CvSink cvSink1 = new CvSink("Cam_Front");
-    cvSink1.setSource(frontCam);
-
-    CvSource output1 = new CvSource("Front_Camera", PixelFormat.kMJPEG, IMG_WIDTH, IMG_HEIGHT, 50);
-
-    MjpegServer mjServer = new MjpegServer("Front_Camera_Server", 7072);
-    mjServer.setSource(output1);
-
-    backCam = CameraServer.getInstance().startAutomaticCapture(RobotMap.backCamera);
-    backCam.setResolution(IMG_WIDTH, IMG_HEIGHT);
-    backCam.setExposureAuto();
-
-    CvSink cvSink2 = new CvSink("Cam_Back");
-    cvSink2.setSource(backCam);
-
-    CvSource output2 = new CvSource("Back_Camera", PixelFormat.kMJPEG, IMG_WIDTH, IMG_HEIGHT, 50);
-
-    MjpegServer mjServer2 = new MjpegServer("Back_Camera_Server", 7072);
-    mjServer2.setSource(output2);
-
-    upperLimit = new DigitalInput(RobotMap.upperLimit);
-    lowerLimit = new DigitalInput(RobotMap.lowerLimit);
-
     gyro = new AHRS(SPI.Port.kMXP);
 
     chooser = new SendableChooser<>();
-    chooser.addOption("DriveForward", new StraightForwardScoring());
+    chooser.addOption("DriveForward", new AutoDriveForward(10000));
     chooser.addOption("Turn90", new AutoTurn(90));
     SmartDashboard.putData("Initial Chooser", chooser);
 
@@ -134,11 +125,19 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
 
+    SmartDashboard.putNumber("LimelightX", x);
+    SmartDashboard.putNumber("LimelightY", y);
+    SmartDashboard.putNumber("LimelightArea", area); 
+    SmartDashboard.putNumber("LimelightTargets", targets);
+    SmartDashboard.putNumber("LimelightSkew", skew);
+
     SmartDashboard.putBoolean("ArmUP", upperLimit.get());
     SmartDashboard.putBoolean("ArmDOWN", lowerLimit.get());
 
     SmartDashboard.putNumber("leftEncoder", Robot.drivetrain.getLeftEncoderPosition());
     SmartDashboard.putNumber("rightEncoder", Robot.drivetrain.getRightEncoderPosition());
+
+    SmartDashboard.putNumber("joystick", Robot.oi.getPilotController().getRawAxis(RobotMap.leftJoystickYAxis));
 
     SmartDashboard.putNumber("GyroAngle", gyro.getAngle());
 
