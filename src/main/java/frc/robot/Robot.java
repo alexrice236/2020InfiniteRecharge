@@ -120,8 +120,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("GyroAngle", gyro.getAngle());
 
-    SmartDashboard.putNumber("ArmAngle", Robot.arm.getArmPosition());
-
     if(gyro.getAngle()>360){
       gyro.reset();
     }else if(gyro.getAngle() < -360){
