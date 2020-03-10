@@ -15,8 +15,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -52,7 +52,6 @@ public class Robot extends TimedRobot {
 
 
   public static UsbCamera frontCam;
-  public static UsbCamera backCam;
   public static final int IMG_WIDTH = 320;
   public static final int IMG_HEIGHT = 240;
 
@@ -98,15 +97,21 @@ public class Robot extends TimedRobot {
     area = ta.getDouble(0.0);
     skew = ts.getDouble(0.0);
 
+    Robot.drivetrain.brakeMode();
+
    
     frontCam = CameraServer.getInstance().startAutomaticCapture(RobotMap.frontCamera);
     frontCam.setResolution(IMG_WIDTH, IMG_HEIGHT);
     frontCam.setExposureAuto();
 
-    gyro = new AHRS(SPI.Port.kMXP);
+    upperLimit = new DigitalInput(RobotMap.upperLimit);
+    lowerLimit = new DigitalInput(RobotMap.lowerLimit);
+
+    gyro = new AHRS(Port.kUSB);
 
     chooser = new SendableChooser<>();
-    chooser.addOption("DriveForward", new AutoDriveForward(10000));
+    chooser.addOption("DriveForward", new AutoDriveForward(3000));
+
     chooser.addOption("Turn90", new AutoTurn(90));
     SmartDashboard.putData("Initial Chooser", chooser);
 

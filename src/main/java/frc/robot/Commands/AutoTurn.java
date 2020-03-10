@@ -23,9 +23,11 @@ public class AutoTurn extends Command {
 
   // Called just before this Command runs the first time
   @Override
-  protected void initialize() {
-    Robot.drivetrain.setSetpoint(turnAngle);
+  protected void initialize(){
+    Robot.drivetrain.configureDriveEncoders();
+    Robot.drivetrain.useTurn = true;
     Robot.drivetrain.enable();
+    Robot.drivetrain.setSetpoint(turnAngle);
   }
 
   // Called repeatedly when this Command is scheduled to run

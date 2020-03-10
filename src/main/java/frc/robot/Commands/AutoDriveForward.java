@@ -24,9 +24,11 @@ public class AutoDriveForward extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.drivetrain.useDrive = true;
+    Robot.drivetrain.configureDriveEncoders();
     Robot.drivetrain.resetEncoders();
-    Robot.drivetrain.setSetpoint(driveDistance);
     Robot.drivetrain.enable();
+    Robot.drivetrain.setSetpoint(driveDistance);
   }
 
   // Called repeatedly when this Command is scheduled to run

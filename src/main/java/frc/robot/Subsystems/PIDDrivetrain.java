@@ -7,6 +7,7 @@
 
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -29,6 +30,7 @@ public class PIDDrivetrain extends PIDSubsystem {
   private WPI_TalonFX rightFrontMotor = new WPI_TalonFX(RobotMap.rightFrontMotor);
 
 
+  
   private SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftBackMotor, leftFrontMotor);
   private SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightBackMotor, rightFrontMotor);
   
@@ -44,8 +46,10 @@ public class PIDDrivetrain extends PIDSubsystem {
   
   public PIDDrivetrain() {
     // Intert a subsystem name and PID values here
-    super("PIDDrivetrain", 0, 0, 0);
-    setAbsoluteTolerance(40);
+
+    super("PIDDrivetrain", 0.1, 0, 0);
+    setAbsoluteTolerance(0.5);
+
 
     // Use these to get going:
     // setSetpoint() - Sets where the PID controller should move the system
@@ -70,7 +74,17 @@ public class PIDDrivetrain extends PIDSubsystem {
   @Override
   protected void usePIDOutput(double output) {
     // Use output to drive your system, like a motor
-      tankDrive(output, output);
+
+      if(useDrive){
+        arcadeDrive(output, 0);
+      }else if(useTurn){
+        arcadeDrive(0, output);
+      }
+  }
+
+  public void configureDriveEncoders(){
+    leftBackMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    rightBackMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
   }
 
@@ -105,10 +119,10 @@ public class PIDDrivetrain extends PIDSubsystem {
   }
 
   public double getAbsoluteDistance(){
-    double leftRotations = getLeftEncoderPosition() / 4096;
-    double rightRotations = getRightEncoderPosition() / -4096;
+    double leftRotations = getLeftEncoderPosition() / 43827.2;
+    double rightRotations = getRightEncoderPosition() / -43827.2;
 
-    return (leftRotations + rightRotations) * 3;
+    return (leftRotations + rightRotations) * 3*Math.PI;
   }
 
   public void brakeMode(){

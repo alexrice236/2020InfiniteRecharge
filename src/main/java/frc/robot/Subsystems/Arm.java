@@ -7,9 +7,9 @@
 
 package frc.robot.Subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.wpilibj.command.PIDSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.Commands.MoveArm;
@@ -17,59 +17,27 @@ import frc.robot.Commands.MoveArm;
 /**
  * Add your docs here.
  */
-public class Arm extends PIDSubsystem {
-  /**
-   * Add your docs here.
-   */
-  public WPI_TalonSRX armMotor = new WPI_TalonSRX(RobotMap.armMotor);
+public class Arm extends Subsystem {
 
-  public Arm() {
-    // Intert a subsystem name and PID values here
-    super("Arm", 10, 0, -3);
-    // Use these to get going:
-    // setSetpoint() - Sets where the PID controller should move the system
-    // to
-    // enable() - Enables the PID controller.
-    setAbsoluteTolerance(10);
-  }
+  public WPI_TalonFX armMotor = new WPI_TalonFX(RobotMap.armMotor);
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-       setDefaultCommand(new MoveArm());
-  }
-
-  @Override
-  protected double returnPIDInput() {
-    // Return your input value for the PID loop
-    // e.g. a sensor, like a potentiometer:
-    // yourPot.getAverageVoltage() / kYourMaxVoltage;
-    return getArmPosition();
-  }
-
-  @Override
-  protected void usePIDOutput(double output) {
-    // Use output to drive your system, like a motor
-    // e.g. yourMotor.set(output);
-    armMotor.set(output);
-  }
-
-  public double getArmPosition(){
-    return armMotor.getSelectedSensorPosition();
+    setDefaultCommand(new MoveArm());
   }
 
   public void moveArm(){
-    if(Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) < 0 && Robot.upperLimit.get()){
-      armMotor.set(-0.05);
+   if(Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) < 0 && Robot.upperLimit.get()){
+      armMotor.set(-Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) * 0.2);
     }else if(Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) > 0 && Robot.lowerLimit.get()){
-      armMotor.set(0);
+      armMotor.set(-Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) * 0.2);
     }else{
-    armMotor.set(-Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) * 0.7);
+    armMotor.set(-Robot.oi.getCopilotController().getRawAxis(RobotMap.leftJoystickYAxis) * 0.35);
     }
   }
   
   public void stopArm(){
     armMotor.set(0);
 }
-
 }
