@@ -10,6 +10,9 @@ package frc.robot.Subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -40,7 +43,6 @@ public class PIDDrivetrain extends PIDSubsystem {
   public boolean useDrive = false;
 
   public double pidInput;
-
   
   public PIDDrivetrain() {
     // Intert a subsystem name and PID values here
@@ -84,6 +86,9 @@ public class PIDDrivetrain extends PIDSubsystem {
     
   public void tankDrive(double leftSpeed, double rightSpeed){
       drive.tankDrive(leftSpeed, rightSpeed);
+  }
+
+  public void moveRotations(){
   }
 
   public boolean shouldUseReverseDrive(){
